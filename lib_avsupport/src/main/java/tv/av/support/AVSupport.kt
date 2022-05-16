@@ -5,16 +5,16 @@ import android.view.Surface
 import tv.av.support.core.FrameFilter
 import tv.av.support.core.MediaCodecCore
 import tv.av.support.core.MediaCodecListCore
-import tv.av.support.model.CodecSupport
+import tv.av.support.model.Support
 import java.io.File
 
-class CodecCheck {
+class AVSupport {
 
     private val mMediaCodecListCore = MediaCodecListCore()
     private val mMediaCodecCore = MediaCodecCore()
     private val mLock = Object()
 
-    fun supportByList(mime: String): CodecSupport {
+    fun supportByList(mime: String): Support {
         return mMediaCodecListCore.codecSupport(mime)
     }
 
@@ -24,7 +24,7 @@ class CodecCheck {
         mtf: MediaFormat?,
         surface: Surface?,
         filter: FrameFilter?
-    ): CodecSupport {
+    ): Support {
         synchronized(mLock) {
             return mMediaCodecCore.codecSupport(file, oneTap, mtf, surface, filter)
         }

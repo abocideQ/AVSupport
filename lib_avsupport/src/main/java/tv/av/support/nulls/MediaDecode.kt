@@ -4,7 +4,7 @@ import android.media.MediaCodec
 import android.media.MediaFormat
 import android.os.Build
 import android.view.Surface
-import tv.av.support.model.CodecSupport
+import tv.av.support.model.Support
 import java.io.File
 
 internal object MediaDecode {
@@ -15,7 +15,7 @@ internal object MediaDecode {
      * surface: render(nullable)
      * onTap: decode a frame or full
      */
-    fun codecSupport(h26n: File, surface: Surface?, onTap: Boolean): CodecSupport {
+    fun codecSupport(h26n: File, surface: Surface?, onTap: Boolean): Support {
         var ret = false
         //1.config
         val mediacodec: MediaCodec
@@ -32,7 +32,7 @@ internal object MediaDecode {
             mediacodec.start()
         } catch (e: Exception) {
             e.printStackTrace()
-            return CodecSupport("MediaDecode config: ${e.cause}", ret)
+            return Support("MediaDecode config: ${e.cause}", ret)
         }
         //2.encoding
         try {
@@ -79,11 +79,11 @@ internal object MediaDecode {
 //                                val outBuffer = mediacodec.outputBuffers
 //                            }
                             mediacodec.releaseOutputBuffer(outIndex, true)
-                            if (onTap) return CodecSupport("MediaDecode: success", ret)
+                            if (onTap) return Support("MediaDecode: success", ret)
                             else continue
                         }
                         bufferInfo.flags == MediaCodec.BUFFER_FLAG_END_OF_STREAM -> {
-                            return CodecSupport("MediaDecode: decode end of stream", ret)
+                            return Support("MediaDecode: decode end of stream", ret)
                         }
                         else -> {
                             //-1 INFO_TRY_AGAIN_LATER again
@@ -96,7 +96,7 @@ internal object MediaDecode {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            return CodecSupport("MediaDecode encoding: ${e.stackTraceToString()}", ret)
+            return Support("MediaDecode encoding: ${e.stackTraceToString()}", ret)
         }
         //3.release
         try {
@@ -104,9 +104,9 @@ internal object MediaDecode {
             mediacodec.release()
         } catch (e: Exception) {
             e.printStackTrace()
-            return CodecSupport("MediaDecode release: ${e.message}", ret)
+            return Support("MediaDecode release: ${e.message}", ret)
         }
-        return CodecSupport("MediaDecode: end, out of loop", ret)
+        return Support("MediaDecode: end, out of loop", ret)
     }
 
     private fun frameReceive(bytes: ByteArray, start: Int, totalSize: Int): Int {
