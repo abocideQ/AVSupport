@@ -15,7 +15,6 @@
             <option value="$PROJECT_DIR$/lib_avsupport" />
           </set>
         </option>
-        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>
