@@ -4,7 +4,7 @@ import android.content.Context
 import java.io.File
 import java.io.FileOutputStream
 
-object ZE {
+object AVSupportAsset {
     fun assets2Sd(context: Context, assetsDirName: String, sdCardPaths: String) {
         var sdCardPath = sdCardPaths
         try {
