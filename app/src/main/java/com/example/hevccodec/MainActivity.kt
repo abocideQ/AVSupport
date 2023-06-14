@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import tv.av.support.AVSupport
+import tv.av.support.core.MediaCodecPlayer
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -23,19 +24,39 @@ class MainActivity : AppCompatActivity() {
 
     private val mCodecCheck = AVSupport()
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(mPermissions, 100)
-        } else {
-            initConfig(264, false)
         }
-    }
+        findViewById<Button>(R.id.bt_supporter).setOnClickListener {
+            initConfig(265, true)
+        }
+        findViewById<Button>(R.id.bt_player).setOnClickListener {
+            val surfaceView = SurfaceView(baseContext)
+            surfaceView.holder?.addCallback(object : SurfaceHolder.Callback {
+                override fun surfaceCreated(holder: SurfaceHolder) {
+                    ZE.assets2Sd(baseContext, "hevc", obbDir.absolutePath)
+                    val file = File("${obbDir.absoluteFile}/hevc/movie.mp4")
+                    MediaCodecPlayer().play(file.absolutePath, holder.surface)
+                }
 
-    override fun onRequestPermissionsResult(code: Int, per: Array<out String>, ret: IntArray) {
-        super.onRequestPermissionsResult(code, per, ret)
-        if (code == 100) initConfig(264, false)
+                override fun surfaceChanged(s: SurfaceHolder, f: Int, w: Int, h: Int) {
+                }
+
+                override fun surfaceDestroyed(holder: SurfaceHolder) {
+                }
+            })
+            val mContentView: LinearLayout = findViewById(R.id.ll_content)
+            mContentView.removeAllViews()
+            mContentView.addView(
+                surfaceView,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                1200
+            )
+        }
     }
 
     @SuppressLint("SetTextI18n")
